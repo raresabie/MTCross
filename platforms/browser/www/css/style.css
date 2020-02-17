@@ -1,0 +1,105 @@
+#profileDiv, #rankingDiv, #loadingDiv, #mapObjectDetailDiv, #fightEatDiv{
+    display: none;
+}
+
+
+
+
+#map {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.marker {
+    background-size: cover;
+    /*background-color: #00caf2;*/
+    cursor: pointer;
+}
+.monsterIcon{
+    background-image: url("../img/monster.png");
+    width: 77px;
+    height: 55px;
+}
+.candyIcon{
+    background-image: url("../img/candy.png");
+    width: 61px;
+    height: 61px;
+}
+.mapboxgl-popup {
+    max-width: 200px;
+}
+
+.mapboxgl-popup-content {
+    text-align: center;
+    font-family: 'Open Sans', sans-serif;
+}
+
+#mapObjectDetailDiv, #mapDiv, #fightEatDiv{
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 2;
+}
+#mapObjectDetailDivIntern, #fightEatDivIntern{
+    width: 80%;
+    height: 80%;
+    margin: 50px;
+    background: #0f6674;
+}
+
+#usernameText{
+    background: #b1bfcf;
+}
+
+#saveButton{
+    display: none;
+}
+
+#buttonToRanking{
+    padding: 5px;
+}
+
+.heartText, .expirienceText, .nameText, .mapObjName{
+    font-size: 35px;
+    letter-spacing: 2px;
+    font-weight: 800;
+    text-decoration: none;
+    font-style: italic;
+    font-variant: small-caps;
+    text-transform: none;
+}
+.heartText{color: #AC2929}
+.expirienceText{color: #FFEB3B}
+.nameText, .mapObjName{
+    color: #003366;
+     font-size: 25px;
+}
+.mapObjName{
+    letter-spacing: normal;
+    font-size: 30px;
+}
+
+.playIcon{
+    height: 60px;
+    width: 60px;
+}
+
+.rankGameIcon{
+    height: 20px;
+    width: 20px;
+}
+
+ol {
+    font-size: 60px;
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+li{
+    font-size: 20px;
+}
