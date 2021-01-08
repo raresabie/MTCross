@@ -1,4 +1,4 @@
-$(onStart)
+$(init)
 var s_id="Axj1NLfrrrVWRjON";
 const BASE_URL="https://ewserver.di.unimi.it/mobicomp/mostri/";
 var userRank=[];
@@ -6,8 +6,32 @@ var myUser=null;
 var mapObjects=[];
 var lastFightEat;
 var markersList=[];
+var distance_limit=50; //on start distance limit
+var hack_counter=0;
+const HACK_ENABLED=true;
+
+function init() {
+    if(localStorage.getItem("session_id")===null){
+        changeDiv("#sessionDiv");
+    }
+    else{
+        changeDiv("#mapDiv");
+        onStart();
+    }
+
+
+    $("#saveSessionButton").click(function () {
+        netControl($("#sessionText").val());
+
+        // localStorage.setItem("session_id", $("#sessionText").val());
+        // console.log("init - my new sid:" + localStorage.getItem("session_id"))
+        // changeDiv("#mapDiv");
+        // onStart();
+    });
+}
 
 function onStart() {
+    document.body.style.backgroundColor = "#4E555C";
     if(localStorage.getItem("session_id")===null){
         netRegister();
     }
@@ -16,6 +40,10 @@ function onStart() {
         setListeners();
         netGetProfile();
         netGetMap();
+        setInterval(netGetMap, 10000);
+        setInterval(function () {
+            hack_counter=0;
+        }, 5000);
     }
 }
 
@@ -23,6 +51,11 @@ function setListeners() {
     //to show save button
     $("#usernameText").click(function () {
         console.log("loog - usernameText clicked");
+        $("#saveButton").show();
+    });
+
+    $("#emailBox").click(function () {
+        console.log("loog - emailText clicked");
         $("#saveButton").show();
     });
 
@@ -49,13 +82,40 @@ function setListeners() {
     });
 
     $("#saveButton").click(function () {
-        netSetName($("#usernameText").val());
+        netSetName($("#usernameText").val(), $("#emailText").val());
         $("#saveButton").hide();
     });
 
     $("#userImage").click(getImgFromGallery);
 
+    if(HACK_ENABLED){
+        $("#buttonHack").click(function () {
+            if(hack_counter<5 && distance_limit===50){
+                hack_counter++;
+                return;
+            }
+
+            hack_counter=0;
+
+            if(distance_limit===50){
+                var r = confirm("Attivare hackMode?");
+            }
+            else{
+                var r = confirm("Disattivare hackMode?");
+            }
+
+            if (r === true) {
+                if(distance_limit===50){
+                    distance_limit=999999;
+                }
+                else distance_limit = 50;
+            }
+        });
+    }
+
+
 }
+
 //ImageChanging
 function getImgFromGallery(){
     var picture= navigator.camera.getPicture(onSuccess, onFail, { quality: 50,
@@ -72,7 +132,7 @@ function onSuccess(imageData) {
 function onFail(message) {
     alert('GetImgFromGallery Failed because: ' + message);
 }
-
+// ..........
 
 
 function setLpXpInMap(lp, xp){
@@ -83,6 +143,7 @@ function setLpXpInMap(lp, xp){
 function changeDiv(newDiv) {
     $(".container").hide();
     $(newDiv).show();
+    $(newDiv).css("display","block");
 }
 function addDiv(newDiv) {
     $(newDiv).show();

@@ -85,11 +85,36 @@ function netGetProfile() {
                 $("#lpUserText").html(myUser.lp);
                 $("#xpUserText").html(myUser.xp);
                 $("#sessionId").html(s_id);
+                $("#emailText").val(myUser.email);
                 setLpXpInMap(myUser.lp, myUser.xp);
             }
         },
         error: function (error) {
             console.log("Richiesta rete errore: "+error);
+            hideLoading();
+        }
+    });
+}
+
+function netControl(sessionID) {
+    showLoading()
+    $.ajax({
+        method:'post',
+        url:BASE_URL+'getprofile.php',
+        data: JSON.stringify({session_id : sessionID}),
+        dataType: 'json',
+        success: function (result) {
+            hideLoading()
+            console.log(result);
+            localStorage.setItem("session_id", $("#sessionText").val());
+            console.log("init - my new sid:" + localStorage.getItem("session_id"))
+            changeDiv("#mapDiv");
+            onStart();
+
+        },
+        error: function (error) {
+            console.log("Richiesta rete errore: "+error);
+            alert("Session Id non valido");
             hideLoading();
         }
     });
@@ -136,7 +161,7 @@ function netGetImage(mapObj) {
             // result=JSON.stringify(result);
             // console.log("Richiesta rete successo json: "+result);
             mapObj.img=result.img;
-            if(mapObj.img!=null){
+            if(mapObj.img!=null &&   $("#mapObjectDetailDiv").css( "display" )==="block" ){
                 console.log("netGetImage - setting Image");
                 // image = document.getElementById("userImage")
                 // image.src = myUser.imgSrc;
@@ -177,14 +202,15 @@ function netFightEat(mapObj) {
     });
 }
 
-function netSetName(name) {
+function netSetName(name, email) {
     showLoading()
     $.ajax({
         method:'post',
         url:BASE_URL+'setprofile.php',
         data: JSON.stringify({
             session_id : s_id,
-            username: name
+            username: name,
+            email: email
         }),
         dataType: 'json',
         success: function (result) {
@@ -228,4 +254,8 @@ function netSetImage(image) {
             alert("errore di rete");
         }
     });
+}
+
+function getAllMapObjImages(){
+
 }

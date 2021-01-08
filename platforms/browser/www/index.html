@@ -16,8 +16,8 @@
     * Create your own at http://cspisawesome.com
     -->
     <!-- <meta http-equiv="Content-Security-Policy" content="default-src 'self' data: gap: 'unsafe-inline' https://ssl.gstatic.com; style-src 'self' 'unsafe-inline'; media-src *" /> -->
-    <script src='https://api.mapbox.com/mapbox-gl-js/v1.6.1/mapbox-gl.js'></script>
-    <link href='https://api.mapbox.com/mapbox-gl-js/v1.6.1/mapbox-gl.css' rel='stylesheet' />
+    <script src='js/mapbox-gl.js'></script>
+    <link href='css/mapbox-gl.css' rel='stylesheet' />
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 
@@ -48,22 +48,31 @@
             <div class="col-5">
                 <img id="userImage" src="img/user.jpeg" class="img-fluid">
             </div>
-        </div>
-        <div class="row">
-            <br>
-        </div>
-        <div class="row justify-content-center">
-            <div class="col-2"></div>
-            <div class="col-6">
-                <input type="text" id="usernameText" class="form-control" placeholder="scegli il tuo nome" maxlength="15" aria-label="Recipient's username" aria-describedby="basic-addon2">
+            <div class="col-12 col-md-7 align-self-center" >
+                <div class="row justify-content-center">
+                    <div class="col-2"></div>
+                    <div class="col-6">
+                        <input type="text" id="usernameText" class="form-control" placeholder="scegli il tuo nome" maxlength="15" aria-label="Recipient's username" aria-describedby="basic-addon2">
+                    </div>
+                    <div class="col-2">
+                        <img id="saveButton" src="img/save.png" class="img-fluid">
+                    </div>
+                </div>
+                <div class="row justify-content-center" id="emailBox">
+                    <div class="col-2"></div>
+                    <div class="col-6">
+                        <input type="text" id="emailText" class="form-control" placeholder="scegli la tua mail" maxlength="30" aria-label="Recipient's username" aria-describedby="basic-addon2">
+                    </div>
+                    <div class="col-2">
+                        <img id="saveEmailButton" src="img/save.png" class="img-fluid">
+                    </div>
+                </div>
+                <div class="row justify-content-center">
+                    <p id="sessionId">fcasdkjbcaskj</p>
+                </div>
             </div>
-            <div class="col-2">
-                <img id="saveButton" src="img/save.png" class="img-fluid">
-            </div>
         </div>
-        <div class="row justify-content-center">
-            <p id="sessionId">fcasdkjbcaskj</p>
-        </div>
+
         <div class="row">
             <br>
         </div>
@@ -79,7 +88,7 @@
 
         <div class="row justify-content-center ">
             <div class="col-3">
-                <img class="img-fluid playIcon" src="img/expirience.png">
+                <img class="img-fluid playIcon" src="img/expirience.png" id="buttonHack">
             </div>
             <div class="col-3">
                 <p id="xpUserText"class="expirienceText">XP</p>
@@ -98,7 +107,7 @@
 
 <!--MapDiv-->
     <div id="mapDiv" class="container">
-        <div id='map' style='width: 100%; height: 100%; padding: 0;'></div>
+        <div id='map'></div>
 
         <script>
             mapboxgl.accessToken = 'pk.eyJ1IjoicmFyZXNhYmllIiwiYSI6ImNrMzRhdWlyaDAwYTczbnFkcGY5bzgzcnYifQ.irkw8wrVs7PSVbNWoEfCow';
@@ -110,6 +119,7 @@
             });
 
             // Add geolocate control to the map.
+
             map.addControl(
                 new mapboxgl.GeolocateControl({
                     positionOptions: {
@@ -161,6 +171,29 @@
         </ol>
     </div>
 
+<!--Session Div-->
+    <div id="sessionDiv" class="container">
+        <div class="row justify-content-center">
+            Inserisci il tuo vecchio session Id
+        </div>
+        <div class="row justify-content-center">
+            <div class="col-2"></div>
+            <div class="col-6">
+                <input type="text" id="sessionText" class="form-control" placeholder="session id vecchio" maxlength="25" aria-label="Recipient's username" aria-describedby="basic-addon2">
+            </div>
+            <div class="col-2">
+                <img id="saveSessionButton" src="img/save.png" class="img-fluid">
+            </div>
+        </div>
+        <div class="row justify-content-end">
+            <div class="col-4">
+                <img src="img/close.png" class="img-fluid" onclick="changeDiv('#mapDiv'); onStart()">
+            </div>
+        </div>
+    </div>
+
+
+
 <!--MapObjectDetailDiv-->
     <div id="mapObjectDetailDiv" class="container" onclick="">
         <div id="mapObjectDetailDivIntern" class="container">
@@ -169,11 +202,10 @@
                 <div class="col-6">
                     <img id="mapObjectImage" src="" class="img-fluid">
                 </div>
-                <div class="col-7 col-sm-6">
+                <div class="col-11 col-sm-11">
                     <p id="mapObjectName" class="mapObjName">Nome</p>
                 </div>
             </div>
-            <br>
             <div class="row justify-content-center">
                 <div id="mapObjectDamageDiv"class="col-8">
                     <img id="mapObjectDamage" src="img/candy_m.png" class="img-fluid">
@@ -184,7 +216,7 @@
                 <div id="mapObjectActionImageDiv" class="col-5">
                     <img id="mapObjectActionImage" class="img-fluid" />
                 </div>
-                <div id="mapObjectAlertDistance" class="col-7" style="display: none"></div>
+                <div id="mapObjectAlertDistance" class="col-7 heartText" style="display: none; font-size: 25px"></div>
                 <div class="col-4">
                     <img src="img/close.png" class="img-fluid" onclick="changeDiv('#mapDiv')">
                 </div>
@@ -201,11 +233,10 @@
                 <div class="col-6">
                     <img id="mapObjectImageFE" src="" class="img-fluid">
                 </div>
-                <div class="col-7 col-sm-6">
+                <div class="col-11 col-sm-11">
                     <p id="mapObjectNameFE" class="mapObjName">Nome</p>
                 </div>
             </div>
-            <br>
             <div class="row justify-content-center">
                 <div class="col-4">
                     <img id="fightEatResultImage" src="img/victory.png" class="img-fluid">
@@ -259,11 +290,7 @@
     <script type="text/javascript">
         app.initialize();
     </script>
-<!--TurfJs-->
-    <script src='js/turf.js'></script>
-    <script>
-        var bbox = turf.bbox(features);
-    </script>
+
 <!--my JS Files-->
     <script src="js/data.js"></script>
     <script src="js/view.js"></script>
@@ -275,6 +302,9 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script src="js/popper.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
+
+
+    <script>document.body.style.backgroundColor = "#4E555C";</script>
 </body>
 
 

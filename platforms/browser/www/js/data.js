@@ -1,8 +1,9 @@
 class User{
-    constructor (xp, lp, name, img){
+    constructor (xp, lp, name, img, email){
         this._xp=xp;
         this._lp=lp;
         this._name=name;
+        this._email=email;
         this._img=img;
         this._lon=null;
         this._lat=null;
@@ -22,6 +23,7 @@ class User{
     }
     get lat(){return this._lat;}
     get lon(){return this._lon;}
+    get email(){return this._email}
 
     set img(img){this._img=img;}
     set lp(lp){this._lp=lp+"";}
@@ -29,11 +31,12 @@ class User{
     set lon(lon){this._lon=lon;}
     set lat(lat){this._lat=lat;}
 
-    setData (xp, lp, name, img){
+    setData (xp, lp, name, img, email){
         this._xp=xp;
         this._lp=lp;
         this._name=name;
         this._img=img;
+        this._email=email;
     }
 
     setLpXp(lp, xp){
@@ -61,6 +64,8 @@ class mapObject {
             this._distance=distanceBetween(myUser.lat==null?45.476095:myUser.lat, myUser.lon==null?9.231862:myUser.lon, parseFloat(this._lat), parseFloat(this._lon), "K");
         else
             this._distance=distanceBetween(45.476095, 9.231862, parseFloat(this._lat), parseFloat(this._lon), "K");
+        if(this._img==="")
+            netGetImage(this);
     }
 
     get id(){return this._id;}
@@ -81,10 +86,17 @@ class mapObject {
     }
     get marker(){return this._marker;}
     get distance(){return this._distance;}
+    get lon(){return this._lon;}
+    get lat(){return this._lat;}
+
+
 
     set distance(distance){this._distance=distance;}
     set marker(marker){this._marker=marker;}
     set img(img){this._img=img;}
+    set lon(lon){this._lon=lon;}
+    set lat(lat){this._lat=lat;}
+
 
     isImageNull(){
         if(this._img==null || this._img===""){
@@ -187,17 +199,28 @@ function setMyUser(result) {
     console.log("setMyUser: init");
     if(result!=null){
         if(myUser==null){
-            myUser=new User(result.xp, result.lp, result.username, result.img);
+            myUser=new User(result.xp, result.lp, result.username, result.img, result.email);
         }
         else{
-            myUser.setData(result.xp, result.lp, result.username, result.img);
+            myUser.setData(result.xp, result.lp, result.username, result.img, result.email);
         }
     }
 }
 
 function setMap(result) {
     console.log("setMyUser: init");
-    if(result.mapobjects.length>0){
+    var changeData=false;
+    if(mapObjects.length === result.mapobjects.length){
+        result.mapobjects.forEach(function (mapObj) {
+            if(!isIdInMapObjArray(mapObj.id)){
+                changeData=true;
+            }
+        });
+    }
+    else{
+        changeData=true;
+    }
+    if(changeData){
         mapObjects=[];
         result.mapobjects.forEach(function (mapObj, index) {
 
@@ -205,6 +228,19 @@ function setMap(result) {
             console.log("mapObj:"+ mapObjects[index].name+" size: "+mapObjects[index].size);
             addMarker(mapObjects[index]);
         });
+    }
+    else{
+        console.log("setMap - updating map");
+        removeAllMarkers();
+        result.mapobjects.forEach(function (mapObj, i){
+            mObj=getMapObjById(mapObj.id);
+            if(mapObj.lat !== mObj.lat && mapObj.lon !== mObj.lon){
+                mObj.lat=mapObj.lat;
+                mObj.lon=mapObj.lon;
+            }
+            addMarker(mObj);
+        });
+        updateMapObjectDistance();
     }
     map.on('click', );
 }
@@ -248,6 +284,24 @@ function removeAllMarkers() {
     markersList=[];
 }
 
+//data getting
+
+function getMapObjById(id) {
+    for(var i = 0 ; i<mapObjects.length; i++){
+        if(mapObjects[i].id===id)
+            return mapObjects[i];
+    }
+    return false;
+}
+
+function isIdInMapObjArray(element) {
+    for(var i = 0; mapObjects.length; i++){
+        if(element===mapObjects[i].id)
+            return true;
+    }
+    return false;
+}
+
 //position
 function updatePosition() {
     navigator.geolocation.getCurrentPosition(position => {
@@ -255,7 +309,7 @@ function updatePosition() {
         console.log("lon:"+position.coords.longitude);
         myUser.lat=position.coords.latitude;
         myUser.lon=position.coords.longitude;
-        updateMapObjectDistance()
+        updateMapObjectDistance();
     });
 }
 
@@ -265,8 +319,6 @@ function updateMapObjectDistance() {
         // console.log("dist"+myUser.lat+" "+ myUser.lon+" "+ mapObj._lat+" "+mapObj._lon);
     });
 }
-
-
 
 function distanceBetween(lat1, lon1, lat2, lon2, unit) {
     if ((lat1 == lat2) && (lon1 == lon2)) {

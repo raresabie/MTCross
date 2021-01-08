@@ -34,13 +34,13 @@ function viewMapObjectDetails(mapObj) {
             case "L": $("#mapObjectDamage").attr("src","img/candy_l.png"); break;
         }
     }
-    if(mapObj.distance>50){
+    if(mapObj.distance>distance_limit){
         $("#mapObjectActionImageDiv").hide();
         if(mapObj.distance>1000){
-            $("#mapObjectAlertDistance").show().html("Devi avvicinarti altri "+parseInt(mapObj.distance/1000)+" chilometri");
+            $("#mapObjectAlertDistance").show().html(parseInt(mapObj.distance/1000)+" km all'obbiettivo");
         }
         else{
-            $("#mapObjectAlertDistance").show().html("Devi avvicinarti altri "+mapObj.distance+" metri");
+            $("#mapObjectAlertDistance").show().html(mapObj.distance+" metri all'obbiettivo");
         }
     }
     else {
